@@ -3,10 +3,20 @@ import threading
 import time
 import tarfile
 import os
+import argparse
 
+import pydevd_pycharm
+pydevd_pycharm.settrace('localhost', port=12345, stdoutToServer=True, stderrToServer=True)
 
-address = "/home/vango/archives/"
-address_unpack = "/home/vango/unpack/"
+parser = argparse.ArgumentParser()
+parser.add_argument('-a', '--address', action="store", help="the address of the folder containing the archives")
+parser.add_argument('-au', '--address_unpack', action="store", help="the address where the archives will be unpacked")
+parser.add_argument("-t", "--thread", action="store", type=int, help="number of threads used")
+args = parser.parse_args()
+
+address = args.address
+address_unpack = args.address_unpack
+number_threads = args.thread if args.thread else 1
 
 
 def task(name):
@@ -28,7 +38,7 @@ for file in catalog:
     queue_tarfile.put(file)
 
 threads = []
-for i in range(0, 3):
+for i in range(0, number_threads):
     thread = threading.Thread(target=task, args=(i,))
     threads.append(thread)
     thread.start()
