@@ -5,8 +5,6 @@ import tarfile
 import os
 import argparse
 
-import pydevd_pycharm
-pydevd_pycharm.settrace('localhost', port=12345, stdoutToServer=True, stderrToServer=True)
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-a', '--address', action="store", help="the address of the folder containing the archives")

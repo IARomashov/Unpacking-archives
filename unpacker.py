@@ -7,15 +7,16 @@ import argparse
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-p', '--path', action="store", help="kek")
-parser.add_argument("-t", "--thread", action="store", type=int, help="werwerwer")
-parser.add_argument("--pattern", action="store", help="werwerwer")
+parser.add_argument('-a', '--address', action="store", help="the address of the folder containing the archives")
+parser.add_argument('-au', '--address_unpack', action="store", help="the address where the archives will be unpacked")
+parser.add_argument("-t", "--thread", action="store", type=int, help="number of threads used, default 1")
+parser.add_argument("-p", "--pattern", action="store", help="your sample regex template, by default will unpack everything")
 args = parser.parse_args()
 
-
-address = "/home/vango/archives/"
-address_unpack = "/home/vango/unpack/"
-pattern = r"прп"
+address = args.address
+address_unpack = args.address_unpack
+number_threads = args.thread if args.thread else 1
+pattern = args.pattern if args.pattern else r".*"
 
 
 def task(name):
@@ -42,7 +43,7 @@ for archive in catalog:
 
 
 threads = []
-for i in range(0, 3):
+for i in range(0, number_threads):
     thread = threading.Thread(target=task, args=(i,))
     threads.append(thread)
     thread.start()
